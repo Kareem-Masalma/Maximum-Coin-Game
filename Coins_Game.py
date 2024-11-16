@@ -20,7 +20,6 @@ class Coins:
         # Creating 2D array with the length of our coins array. This 2D array will be our dynamic table.
         self.dp = [[0 for _ in range(len(coins))] for _ in range(len(coins))]
         self.p = [[-1 for _ in range(len(coins))] for _ in range(len(coins))]
-        self.moves = []
 
     # This function is created to go through the array and find the optimal solution for each index.
     def maximum_money(self):
@@ -40,10 +39,10 @@ class Coins:
         # This loop to go through all the dp table to calculate the final answer
         for i in range(len(self.coins) - 3, -1, -1):
             for j in range(2, len(self.coins)):
-                self.maximum_coins(i, j)
+                self.__maximum_coins(i, j)
 
     # This function to calculate the values of a certain index in the dp table based on the dynamic formula
-    def maximum_coins(self, i, j):
+    def __maximum_coins(self, i, j):
         if i > j:
             self.dp[i][j] = 0
         else:
@@ -72,9 +71,10 @@ class Coins:
     # the move on the dp table was i + 1, j - 1. If path is 1 means the move on the dp table was i + 2, j, if the path
     # is 2 means the move is i, j - 2. Any other value means we've reached the end, so we break out of the loop
     def get_moves(self):
+        moves = []
         # Checks if the input is empty
         if not self.coins:
-            return self.moves
+            return moves
         i = 0
         j = len(self.coins) - 1
         res = self.dp[0][-1]
@@ -85,39 +85,39 @@ class Coins:
             # checks if the move we've taken is i + 1, j -1
             if self.p[i][j] == 0:
                 if res - self.coins[i] == self.dp[i + 1][j - 1]:
-                    self.moves.append(self.coins[i])
+                    moves.append(self.coins[i])
                     res -= self.coins[i]
                 else:
-                    self.moves.append((self.coins[j]))
+                    moves.append((self.coins[j]))
                     res -= self.coins[j]
                 i += 1
                 j -= 1
             # checks if the move we,ve taken is i +2, j
             elif self.p[i][j] == 1:
                 if res - self.coins[i] == self.dp[i + 2][j]:
-                    self.moves.append(self.coins[i])
+                    moves.append(self.coins[i])
                     res -= self.coins[i]
                 else:
-                    self.moves.append((self.coins[j]))
+                    moves.append((self.coins[j]))
                     res -= self.coins[j]
                 i += 2
             # checks if the move we,ve taken is i, j - 2
             elif self.p[i][j] == 2:
                 if res - self.coins[i] == self.dp[i][j - 2]:
-                    self.moves.append(self.coins[i])
+                    moves.append(self.coins[i])
                     res -= self.coins[i]
                 else:
-                    self.moves.append((self.coins[j]))
+                    moves.append((self.coins[j]))
                     res -= self.coins[j]
                 j -= 2
             # Any other possibility means we've reached the end, we take the final value and break from the loop
             else:
                 if res - self.coins[i] == 0:
-                    self.moves.append(self.coins[i])
+                    moves.append(self.coins[i])
                     res -= self.coins[i]
                 elif res - self.coins[j] == 0:
-                    self.moves.append((self.coins[j]))
+                    moves.append((self.coins[j]))
                     res -= self.coins[j]
                 break
 
-        return self.moves
+        return moves
